@@ -1,0 +1,153 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+class BST {
+private:
+    Node* root;
+
+    Node* createNode(int value) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->left = newNode->right = nullptr;
+        return newNode;
+    }
+
+    Node* insertRecursive(Node* root, int value) {
+        if (root == nullptr) {
+            return createNode(value);
+        }
+
+        if (value < root->data) {
+            root->left = insertRecursive(root->left, value);
+        } else if (value > root->data) {
+            root->right = insertRecursive(root->right, value);
+        }
+
+        return root;
+    }
+
+    void inorderTraversal(Node* root) {
+        if (root != nullptr) {
+            inorderTraversal(root->left);
+            cout << root->data << " ";
+            inorderTraversal(root->right);
+        }
+    }
+
+    void preorderTraversal(Node* root) {
+        if (root != nullptr) {
+            cout << root->data << " ";
+            preorderTraversal(root->left);
+            preorderTraversal(root->right);
+        }
+    }
+
+    void postorderTraversal(Node* root) {
+        if (root != nullptr) {
+            postorderTraversal(root->left);
+            postorderTraversal(root->right);
+            cout << root->data << " ";
+        }
+    }
+
+    Node* searchRecursive(Node* root, int key) {
+        if (root == nullptr || root->data == key) {
+            return root;
+        }
+
+        if (key < root->data) {
+            return searchRecursive(root->left, key);
+        }
+
+        return searchRecursive(root->right, key);
+    }
+
+public:
+    BST() : root(nullptr) {}
+
+    void insert(int value) {
+        root = insertRecursive(root, value);
+    }
+
+    void inorder() {
+        cout << "Inorder traversal: ";
+        inorderTraversal(root);
+        cout << endl;
+    }
+
+    void preorder() {
+        cout << "Preorder traversal: ";
+        preorderTraversal(root);
+        cout << endl;
+    }
+
+    void postorder() {
+        cout << "Postorder traversal: ";
+        postorderTraversal(root);
+        cout << endl;
+    }
+
+    bool search(int key) {
+        Node* result = searchRecursive(root, key);
+        if (result != nullptr) {
+            cout << "Element " << key << " found in the BST." << endl;
+            return true;
+        } else {
+            cout << "Element " << key << " not found in the BST." << endl;
+            return false;
+        }
+    }
+};
+
+int main() {
+    BST bst;
+    int choice, key;
+
+    // Creating BST with given elements
+    int elements[] = {6, 9, 5, 2, 8, 15, 24, 14, 7, 8, 5, 2};
+    int numElements = sizeof(elements) / sizeof(elements[0]);
+    for (int i = 0; i < numElements; ++i) {
+        bst.insert(elements[i]);
+    }
+
+    do {
+        cout << "\n----- Binary Search Tree Operations -----\n";
+        cout << "1. Inorder Traversal\n";
+        cout << "2. Preorder Traversal\n";
+        cout << "3. Postorder Traversal\n";
+        cout << "4. Search Element\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                bst.inorder();
+                break;
+            case 2:
+                bst.preorder();
+                break;
+            case 3:
+                bst.postorder();
+                break;
+            case 4:
+                cout << "Enter element to search: ";
+                cin >> key;
+                bst.search(key);
+                break;
+            case 5:
+                cout << "Exiting program.\n";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a valid option.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}
